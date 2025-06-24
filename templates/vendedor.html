@@ -125,25 +125,88 @@
     const imagenInput = document.getElementById('imagenes');
     const previewContainer = document.getElementById('previewContainer');
 
+    let selectedFiles = [];
+
     imagenInput.addEventListener('change', function (event) {
+        const newFiles = Array.from(event.target.files);
+
+        // Agrega los nuevos archivos sin borrar los anteriores
+        newFiles.forEach(file => {
+            selectedFiles.push(file);
+        });
+
+        renderPreviews();
+        imagenInput.value = ''; // permite volver a seleccionar las mismas imágenes si se desea
+    });
+
+    function renderPreviews() {
         previewContainer.innerHTML = '';
-        const files = event.target.files;
-        Array.from(files).forEach(file => {
+
+        selectedFiles.forEach((file, index) => {
             const reader = new FileReader();
             reader.onload = function (e) {
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('position-relative');
+                wrapper.style.marginRight = '10px';
+
                 const img = document.createElement('img');
                 img.src = e.target.result;
                 img.classList.add('img-thumbnail');
                 img.style.maxHeight = '150px';
-                previewContainer.appendChild(img);
-            }
+
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = '×';
+                removeBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'position-absolute');
+                removeBtn.style.top = '0';
+                removeBtn.style.right = '0';
+                removeBtn.style.borderRadius = '50%';
+                removeBtn.style.padding = '0 8px';
+                removeBtn.style.zIndex = '1';
+
+                removeBtn.addEventListener('click', () => {
+                    selectedFiles.splice(index, 1);
+                    renderPreviews();
+                });
+
+                wrapper.appendChild(img);
+                wrapper.appendChild(removeBtn);
+                previewContainer.appendChild(wrapper);
+            };
             reader.readAsDataURL(file);
         });
-    });
+    }
 
+    // Mostrar/ocultar productos
     document.getElementById('toggleProductos').addEventListener('click', function () {
         const productos = document.getElementById('productos');
         productos.style.display = productos.style.display === 'none' ? 'flex' : 'none';
     });
+
+    // Reemplazar la función submit para subir los archivos seleccionados correctamente
+    document.querySelector('form').addEventListener('submit', function (event) {
+        const form = event.target;
+        const formData = new FormData(form);
+
+        // Agregar todas las imágenes seleccionadas
+        selectedFiles.forEach(file => {
+            formData.append('imagenes', file);
+        });
+
+        // Prevenir submit original
+        event.preventDefault();
+
+        // Enviar el formulario manualmente
+        fetch(form.action, {
+            method: form.method,
+            body: formData
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                alert('Hubo un error al subir el producto');
+            }
+        });
+    });
 </script>
+
 {% endblock %}
