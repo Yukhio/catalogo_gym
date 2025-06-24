@@ -2,7 +2,7 @@
   {
     "id": "f722b8fe2d6f44c5ae8b9615d8398d87",
     "nombre": "Camisa negra Gym Shark",
-    "descripcion": "Camisa comoda negra de gym shark",
+    "descripcion": "Camisa oversize comoda negra de gym shark",
     "categoria": "Camisa",
     "precio": 351.0,
     "stock": 50,
@@ -14,8 +14,8 @@
   },
   {
     "id": "37038fea99674e4d855337e16b3e9d8f",
-    "nombre": "Camisa café",
-    "descripcion": "Prueba",
+    "nombre": "Camisa beige Gym Shark",
+    "descripcion": "Camisa M de color beige de gym shark",
     "categoria": "Camisa",
     "precio": 400.0,
     "stock": 15,

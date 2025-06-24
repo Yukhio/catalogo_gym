@@ -21,16 +21,19 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-md-4">
+                <div class="col-sm-6 col-md-4 mb-4">
+
                     <label for="precio" class="form-label">Precio</label>
                     <input type="number" placeholder="Precio" step="1.00" class="form-control" id="precio" name="precio"
                         required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-6 col-md-4 mb-4">
+
                     <label for="stock" class="form-label">Stock</label>
                     <input type="number" placeholder="Existencia" class="form-control" id="stock" name="stock" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-6 col-md-4 mb-4">
+
                     <label for="marca" class="form-label">Marca</label>
                     <select class="form-control" id="marca" name="marca" required>
                         <option value="">Selecciona una marca</option>
@@ -56,14 +59,15 @@
 
 <div class="row" id="productos" style="display: none;">
     {% for producto in productos %}
-    <div class="col-md-4 mb-4">
+    <div class="col-sm-6 col-md-4 mb-4">
+
         <div class="card">
             {% if producto.imagenes %}
             <div id="carousel{{ loop.index }}" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     {% for img in producto.imagenes %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img src="/uploads/{{ img }}" class="d-block w-100" alt="{{ producto.nombre }}">
+                        <img src="/uploads/{{ img }}" class="d-block w-100 img-fluid" style="height: auto; object-fit: contain;" alt="{{ producto.nombre }}">
                     </div>
                     {% endfor %}
                 </div>
