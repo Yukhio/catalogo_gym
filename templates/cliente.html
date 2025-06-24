@@ -27,7 +27,7 @@
             </div>
             {% endif %}
             <div class="card-body">
-                <h5 class="fw-bold">{{ producto.nombre }}</h5>
+                <h5 class="fw-bold">{{ producto.nombre }} - Talla: {{ producto.talla }}</h5>
                 <p class="text-muted mb-1">{{ producto.descripcion }}</p>
                 <p class="text-primary mb-1 fw-semibold">Precio: ${{ '%.2f'|format(producto.precio) }} MXN</p>
                 {% if producto.stock > 0 %}

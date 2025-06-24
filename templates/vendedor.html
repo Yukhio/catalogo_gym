@@ -5,12 +5,12 @@
         <div class="col-md-6">
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="nombre" class="form-label">Nombre del producto</label>
+                    <label for="nombre" class="form-label text-white">Nombre del producto</label>
                     <input type="text" placeholder="Agrega nombre del producto" class="form-control" id="nombre"
                         name="nombre" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="categoria" class="form-label">Categoría</label>
+                    <label for="categoria" class="form-label text-white">Categoría</label>
                     <select class="form-control" id="categoria" name="categoria" required>
                         <option value="">Selecciona una categoría</option>
                         <option value="Camisa">Camisa</option>
@@ -21,33 +21,41 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <div class="col-sm-6 col-md-4 mb-4">
-
-                    <label for="precio" class="form-label">Precio</label>
+                <div class="col-sm-6 col-md-3 mb-4">
+                    <label for="precio" class="form-label text-white">Precio</label>
                     <input type="number" placeholder="Precio" step="1.00" class="form-control" id="precio" name="precio"
                         required>
                 </div>
-                <div class="col-sm-6 col-md-4 mb-4">
-
-                    <label for="stock" class="form-label">Stock</label>
+                <div class="col-sm-6 col-md-3 mb-4">
+                    <label for="stock" class="form-label text-white">Stock</label>
                     <input type="number" placeholder="Existencia" class="form-control" id="stock" name="stock" required>
                 </div>
-                <div class="col-sm-6 col-md-4 mb-4">
-
-                    <label for="marca" class="form-label">Marca</label>
+                <div class="col-sm-6 col-md-3 mb-4">
+                    <label for="marca" class="form-label text-white">Marca</label>
                     <select class="form-control" id="marca" name="marca" required>
                         <option value="">Selecciona una marca</option>
-                        <option value="GymShark">GymShark</option>
+                        <option value="GymShark">GYMSHARK</option>
                         <option value="YOUNGLA">YOUNGLA</option>
                     </select>
                 </div>
+                <div class="col-sm-6 col-md-3 mb-4">
+                    <label for="talla" class="form-label text-white">Talla</label>
+                    <select class="form-control" id="talla" name="talla" required>
+                        <option value="">Selecciona una talla</option>
+                        <option value="CH">CH</option>
+                        <option value="M">M</option>
+                        <option value="G">G</option>
+                        <option value="XG">Unitalla</option>
+                    </select>
+                </div>
             </div>
+
         </div>
         <div class="col-md-6">
-            <label for="descripcion" class="form-label">Descripción</label>
+            <label for="descripcion" class="form-label text-white">Descripción</label>
             <textarea class="form-control mb-3" placeholder="Agrega descripción del producto" id="descripcion"
                 name="descripcion" required></textarea>
-            <label for="imagenes" class="form-label">Imágenes del producto</label>
+            <label for="imagenes" class="form-label text-white">Imágenes del producto</label>
             <input type="file" class="form-control" id="imagenes" name="imagenes" accept="image/*" multiple required>
             <div id="previewContainer" class="d-flex flex-wrap gap-2 mt-2"></div>
         </div>
@@ -55,7 +63,7 @@
     <button type="submit" class="btn btn-primary mt-3">Subir producto</button>
 </form>
 
-<button class="btn btn-outline-secondary mb-3" id="toggleProductos">Mostrar/ocultar productos</button>
+<button class="btn btn-outline-secondary mb-3 form-label text-white" id="toggleProductos">Mostrar/ocultar productos</button>
 
 <div class="row" id="productos" style="display: none;">
     {% for producto in productos %}
@@ -67,7 +75,8 @@
                 <div class="carousel-inner">
                     {% for img in producto.imagenes %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img src="/uploads/{{ img }}" class="d-block w-100 img-fluid" style="height: auto; object-fit: contain;" alt="{{ producto.nombre }}">
+                        <img src="/uploads/{{ img }}" class="d-block w-100 img-fluid"
+                            style="height: auto; object-fit: contain;" alt="{{ producto.nombre }}">
                     </div>
                     {% endfor %}
                 </div>

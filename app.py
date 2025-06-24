@@ -63,6 +63,7 @@ def vista_vendedor():
         descripcion = request.form['descripcion']
         categoria = request.form['categoria']
         marca = request.form['marca']
+        talla = request.form['talla']
         precio = float(request.form['precio'])
         stock = int(request.form['stock'])
         imagenes = request.files.getlist('imagenes')
@@ -85,6 +86,7 @@ def vista_vendedor():
                 'precio': precio,
                 'stock': stock,
                 'marca': marca,
+                'talla': talla,
                 'imagenes': imagenes_guardadas,
                 'visible': True
             }
