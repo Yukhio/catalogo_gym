@@ -49,7 +49,6 @@
                     </select>
                 </div>
             </div>
-
         </div>
         <div class="col-md-6">
             <label for="descripcion" class="form-label text-white">Descripción</label>
@@ -63,7 +62,8 @@
     <button type="submit" class="btn btn-primary mt-3">Subir producto</button>
 </form>
 
-<button class="btn btn-outline-secondary mb-3 form-label text-white" id="toggleProductos">Mostrar/ocultar productos</button>
+<button class="btn btn-outline-secondary mb-3 form-label text-white" id="toggleProductos">Mostrar/ocultar
+    productos</button>
 
 <div class="row" id="productos" style="display: none;">
     {% for producto in productos %}
@@ -76,7 +76,7 @@
                     {% for img in producto.imagenes %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <img src="/uploads/{{ img }}" class="d-block w-100 img-fluid"
-                            style="height: auto; object-fit: contain;" alt="{{ producto.nombre }}">
+                            style="max-height: 350px; object-fit: contain;" alt="{{ producto.nombre }}">
                     </div>
                     {% endfor %}
                 </div>

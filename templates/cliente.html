@@ -9,19 +9,19 @@
                 <div class="carousel-inner" style="height: 250px; object-fit: contain;">
                     {% for img in producto.imagenes %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img src="/uploads/{{ img }}" class="d-block w-100 img-fluid" style="height: auto; object-fit: contain;"
-                            alt="{{ producto.nombre }}">
+                        <img src="/uploads/{{ img }}" class="d-block w-100 img-fluid"
+                            style="max-height: 350px; object-fit: contain;" alt="{{ producto.nombre }}">
                     </div>
                     {% endfor %}
                 </div>
                 {% if producto.imagenes|length > 1 %}
                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ loop.index }}"
                     data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
+                    <span class="carousel-control-prev-icon custom-arrow">&#10094;</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ loop.index }}"
                     data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
+                    <span class="carousel-control-next-icon custom-arrow">&#10095;</span>
                 </button>
                 {% endif %}
             </div>
