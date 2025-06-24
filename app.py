@@ -9,8 +9,8 @@ app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.secret_key = 'super_secret_key'
 
 CATALOGO_PATH = 'data/catalogo.json'
-USUARIO = 'admin'
-CLAVE = '1234'
+USUARIO = 'sergioo.vu2'
+CLAVE = '123'
 
 @app.route('/uploads/<path:filename>')
 def uploads(filename):
