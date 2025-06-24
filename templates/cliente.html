@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    {% for producto in productos %}
+    <div class="col-sm-6 col-md-4 mb-4">
+        <div class="card h-100">
+            {% if producto.imagenes %}
+            <div id="carousel{{ loop.index }}" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" style="height: 250px; object-fit: contain;">
+                    {% for img in producto.imagenes %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="/uploads/{{ img }}" class="d-block w-100 img-fluid"
+                            style="max-height: 350px; object-fit: contain;" alt="{{ producto.nombre }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if producto.imagenes|length > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ loop.index }}"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon custom-arrow">&#10094;</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ loop.index }}"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon custom-arrow">&#10095;</span>
+                </button>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="fw-bold">{{ producto.nombre }} - Talla: {{ producto.talla }}</h5>
+                <p class="text-muted mb-1">{{ producto.descripcion }}</p>
+                <p class="text-primary mb-1 fw-semibold">Precio: ${{ '%.2f'|format(producto.precio) }} MXN</p>
+                {% if producto.stock > 0 %}
+                <p class="text-success mb-0">{{ producto.stock }} en existencia</p>
+                {% else %}
+                <p class="text-danger mb-0">Sin stock</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
