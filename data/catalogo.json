@@ -1,0 +1,29 @@
+[
+  {
+    "id": "f722b8fe2d6f44c5ae8b9615d8398d87",
+    "nombre": "Camisa negra Gym Shark",
+    "descripcion": "Camisa comoda negra de gym shark",
+    "categoria": "Camisa",
+    "precio": 351.0,
+    "stock": 50,
+    "marca": "GymShark",
+    "imagenes": [
+      "00e0abc21e094ec8811e3a53ff8e7f82_Camisa negra GymShark.jpg"
+    ],
+    "visible": true
+  },
+  {
+    "id": "37038fea99674e4d855337e16b3e9d8f",
+    "nombre": "Camisa café",
+    "descripcion": "Prueba",
+    "categoria": "Camisa",
+    "precio": 400.0,
+    "stock": 15,
+    "marca": "GymShark",
+    "imagenes": [
+      "54bda1a7c9154440a9a4462065487403_Camisa beige gymshark 2.jpg",
+      "f370c6a6c3374ad5a0203e52a9164eae_Camisa beige gymShark.jpg"
+    ],
+    "visible": true
+  }
+]

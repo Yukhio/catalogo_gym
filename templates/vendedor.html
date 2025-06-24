@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="mb-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="nombre" class="form-label">Nombre del producto</label>
+                    <input type="text" placeholder="Agrega nombre del producto" class="form-control" id="nombre"
+                        name="nombre" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="categoria" class="form-label">Categoría</label>
+                    <select class="form-control" id="categoria" name="categoria" required>
+                        <option value="">Selecciona una categoría</option>
+                        <option value="Camisa">Camisa</option>
+                        <option value="Pants">Pants</option>
+                        <option value="Shorts">Shorts</option>
+                        <option value="Shirt">Shirt</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="precio" class="form-label">Precio</label>
+                    <input type="number" placeholder="Precio" step="1.00" class="form-control" id="precio" name="precio"
+                        required>
+                </div>
+                <div class="col-md-4">
+                    <label for="stock" class="form-label">Stock</label>
+                    <input type="number" placeholder="Existencia" class="form-control" id="stock" name="stock" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="marca" class="form-label">Marca</label>
+                    <select class="form-control" id="marca" name="marca" required>
+                        <option value="">Selecciona una marca</option>
+                        <option value="GymShark">GymShark</option>
+                        <option value="YOUNGLA">YOUNGLA</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control mb-3" placeholder="Agrega descripción del producto" id="descripcion"
+                name="descripcion" required></textarea>
+            <label for="imagenes" class="form-label">Imágenes del producto</label>
+            <input type="file" class="form-control" id="imagenes" name="imagenes" accept="image/*" multiple required>
+            <div id="previewContainer" class="d-flex flex-wrap gap-2 mt-2"></div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Subir producto</button>
+</form>
+
+<button class="btn btn-outline-secondary mb-3" id="toggleProductos">Mostrar/ocultar productos</button>
+
+<div class="row" id="productos" style="display: none;">
+    {% for producto in productos %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            {% if producto.imagenes %}
+            <div id="carousel{{ loop.index }}" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for img in producto.imagenes %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="/uploads/{{ img }}" class="d-block w-100" alt="{{ producto.nombre }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if producto.imagenes|length > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ loop.index }}"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ loop.index }}"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ producto.nombre }}</h5>
+                <p class="text-muted mb-1">{{ producto.categoria }} - {{ producto.marca }}</p>
+                <p class="card-text">{{ producto.descripcion }}</p>
+                <form method="post" action="{{ url_for('editar_producto', producto_id=producto.id) }}">
+                    <div class="mb-2">
+                        <label>Precio:</label>
+                        <input type="number" step="0.01" name="precio" value="{{ producto.precio }}"
+                            class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>Stock:</label>
+                        <input type="number" name="stock" value="{{ producto.stock }}" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
+                </form>
+                {% if producto.visible %}
+                <a href="{{ url_for('ocultar_producto', producto_id=producto.id) }}"
+                    class="btn btn-warning btn-sm mt-2">Ocultar</a>
+                {% else %}
+                <a href="{{ url_for('mostrar_producto', producto_id=producto.id) }}"
+                    class="btn btn-success btn-sm mt-2">Mostrar</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    const imagenInput = document.getElementById('imagenes');
+    const previewContainer = document.getElementById('previewContainer');
+
+    imagenInput.addEventListener('change', function (event) {
+        previewContainer.innerHTML = '';
+        const files = event.target.files;
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('img-thumbnail');
+                img.style.maxHeight = '150px';
+                previewContainer.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+        });
+    });
+
+    document.getElementById('toggleProductos').addEventListener('click', function () {
+        const productos = document.getElementById('productos');
+        productos.style.display = productos.style.display === 'none' ? 'flex' : 'none';
+    });
+</script>
+{% endblock %}
