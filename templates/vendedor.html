@@ -55,7 +55,7 @@
             <textarea class="form-control mb-3" placeholder="Agrega descripción del producto" id="descripcion"
                 name="descripcion" required></textarea>
             <label for="imagenes" class="form-label text-white">Imágenes del producto</label>
-            <input type="file" class="form-control" id="imagenes" name="imagenes" accept="image/*" multiple required>
+            <input type="file" class="form-control" id="imagenes" name="imagenes" accept="image/*" multiple>
             <div id="previewContainer" class="d-flex flex-wrap gap-2 mt-2"></div>
         </div>
     </div>
@@ -65,7 +65,7 @@
 <button class="btn btn-outline-secondary mb-3 form-label text-white" id="toggleProductos">Mostrar/ocultar
     productos</button>
 
-<div class="row" id="productos" style="display: none;">
+<div class="row d-none" id="productos">
     {% for producto in productos %}
     <div class="col-sm-6 col-md-4 mb-4">
 
@@ -93,7 +93,7 @@
             </div>
             {% endif %}
             <div class="card-body">
-                <h5 class="card-title">{{ producto.nombre }}</h5>
+                <h5 class="card-title">{{ producto.nombre }} - Talla: {{ producto.talla }}</h5>
                 <p class="text-muted mb-1">{{ producto.categoria }} - {{ producto.marca }}</p>
                 <p class="card-text">{{ producto.descripcion }}</p>
                 <form method="post" action="{{ url_for('editar_producto', producto_id=producto.id) }}">
@@ -108,13 +108,13 @@
                     </div>
                     <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
                 </form>
-                {% if producto.visible %}
-                <a href="{{ url_for('ocultar_producto', producto_id=producto.id) }}"
-                    class="btn btn-warning btn-sm mt-2">Ocultar</a>
-                {% else %}
-                <a href="{{ url_for('mostrar_producto', producto_id=producto.id) }}"
-                    class="btn btn-success btn-sm mt-2">Mostrar</a>
-                {% endif %}
+                <form method="post" action="{{ url_for('toggle_visibilidad', producto_id=producto.id) }}">
+                    {% if producto.visible %}
+                    <button type="submit" class="btn btn-warning btn-sm mt-2">Ocultar</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-success btn-sm mt-2">Mostrar</button>
+                    {% endif %}
+                </form>
             </div>
         </div>
     </div>
@@ -122,91 +122,86 @@
 </div>
 
 <script>
-    const imagenInput = document.getElementById('imagenes');
-    const previewContainer = document.getElementById('previewContainer');
-
-    let selectedFiles = [];
-
-    imagenInput.addEventListener('change', function (event) {
-        const newFiles = Array.from(event.target.files);
-
-        // Agrega los nuevos archivos sin borrar los anteriores
-        newFiles.forEach(file => {
-            selectedFiles.push(file);
-        });
-
-        renderPreviews();
-        imagenInput.value = ''; // permite volver a seleccionar las mismas imágenes si se desea
-    });
-
-    function renderPreviews() {
-        previewContainer.innerHTML = '';
-
-        selectedFiles.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const wrapper = document.createElement('div');
-                wrapper.classList.add('position-relative');
-                wrapper.style.marginRight = '10px';
-
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.classList.add('img-thumbnail');
-                img.style.maxHeight = '150px';
-
-                const removeBtn = document.createElement('button');
-                removeBtn.textContent = '×';
-                removeBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'position-absolute');
-                removeBtn.style.top = '0';
-                removeBtn.style.right = '0';
-                removeBtn.style.borderRadius = '50%';
-                removeBtn.style.padding = '0 8px';
-                removeBtn.style.zIndex = '1';
-
-                removeBtn.addEventListener('click', () => {
-                    selectedFiles.splice(index, 1);
-                    renderPreviews();
-                });
-
-                wrapper.appendChild(img);
-                wrapper.appendChild(removeBtn);
-                previewContainer.appendChild(wrapper);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    // Mostrar/ocultar productos
-    document.getElementById('toggleProductos').addEventListener('click', function () {
+    document.addEventListener("DOMContentLoaded", function () {
+        const imagenInput = document.getElementById('imagenes');
+        const previewContainer = document.getElementById('previewContainer');
+        const altaForm = document.querySelector('form[enctype="multipart/form-data"]');
+        const toggleBtn = document.getElementById('toggleProductos');
         const productos = document.getElementById('productos');
-        productos.style.display = productos.style.display === 'none' ? 'flex' : 'none';
-    });
 
-    // Reemplazar la función submit para subir los archivos seleccionados correctamente
-    document.querySelector('form').addEventListener('submit', function (event) {
-        const form = event.target;
-        const formData = new FormData(form);
+        let selectedFiles = [];
 
-        // Agregar todas las imágenes seleccionadas
-        selectedFiles.forEach(file => {
-            formData.append('imagenes', file);
+        imagenInput.addEventListener('change', function (event) {
+            const newFiles = Array.from(event.target.files);
+            newFiles.forEach(file => selectedFiles.push(file));
+            renderPreviews();
         });
 
-        // Prevenir submit original
-        event.preventDefault();
+        function renderPreviews() {
+            previewContainer.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('position-relative');
+                    wrapper.style.marginRight = '10px';
 
-        // Enviar el formulario manualmente
-        fetch(form.action, {
-            method: form.method,
-            body: formData
-        }).then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            } else {
-                alert('Hubo un error al subir el producto');
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('img-thumbnail');
+                    img.style.maxHeight = '150px';
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.textContent = '×';
+                    removeBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'position-absolute');
+                    removeBtn.style.top = '0';
+                    removeBtn.style.right = '0';
+                    removeBtn.style.borderRadius = '50%';
+                    removeBtn.style.padding = '0 8px';
+                    removeBtn.style.zIndex = '1';
+
+                    removeBtn.addEventListener('click', () => {
+                        selectedFiles.splice(index, 1);
+                        renderPreviews();
+                    });
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    previewContainer.appendChild(wrapper);
+                };
+                reader.onloadend = function () {
+                    imagenInput.value = '';
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        altaForm.addEventListener('submit', function (event) {
+            if (selectedFiles.length === 0) {
+                alert("Debes seleccionar al menos una imagen del producto.");
+                event.preventDefault();
+                return;
             }
+
+            const formData = new FormData(altaForm);
+            selectedFiles.forEach(file => formData.append('imagenes', file));
+
+            event.preventDefault();
+            fetch(altaForm.action, {
+                method: altaForm.method,
+                body: formData
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    alert('Hubo un error al subir el producto');
+                }
+            });
+        });
+
+        toggleBtn.addEventListener('click', function () {
+            productos.classList.toggle('d-none');
         });
     });
 </script>
-
 {% endblock %}

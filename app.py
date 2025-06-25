@@ -139,6 +139,19 @@ def editar_producto(producto_id):
     guardar_catalogo(catalogo)
     return redirect(url_for('vista_vendedor'))
 
+@app.route('/toggle_visibilidad/<producto_id>', methods=['POST'])
+def toggle_visibilidad(producto_id):
+    if 'vendedor' not in session or session['vendedor'] != True:
+        return redirect(url_for('login'))
+
+    catalogo = cargar_catalogo()
+    for producto in catalogo:
+        if producto['id'] == producto_id:
+            producto['visible'] = not producto['visible']
+            break
+    guardar_catalogo(catalogo)
+    return redirect(url_for('vista_vendedor'))
+
 
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
