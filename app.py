@@ -33,7 +33,20 @@ def guardar_catalogo(data):
 def vista_cliente():
     catalogo = cargar_catalogo()
     visibles = [p for p in catalogo if p['visible']]
+
+    marca = request.args.get('marca', '')
+    categoria = request.args.get('categoria', '')
+    talla = request.args.get('talla', '')
+
+    if marca:
+        visibles = [p for p in visibles if p['marca'] == marca]
+    if categoria:
+        visibles = [p for p in visibles if p['categoria'] == categoria]
+    if talla:
+        visibles = [p for p in visibles if p['talla'] == talla]
+
     return render_template('cliente.html', productos=visibles)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

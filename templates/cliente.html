@@ -1,6 +1,46 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="row">
+<form class="row g-2 align-items-center mb-4 fade-in" method="get">
+    <div class="col-auto">
+        <select class="form-select form-select-sm" name="marca">
+            <option value="">Marca</option>
+            <option value="GYMSHARK" {% if request.args.get('marca')=='GYMSHARK' %}selected{% endif %}>GYMSHARK</option>
+            <option value="YOUNGLA" {% if request.args.get('marca')=='YOUNGLA' %}selected{% endif %}>YOUNGLA</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <select class="form-select form-select-sm" name="categoria">
+            <option value="">Categoría</option>
+            <option value="Camisa" {% if request.args.get('categoria')=='Camisa' %}selected{% endif %}>Camisa</option>
+            <option value="Pants" {% if request.args.get('categoria')=='Pants' %}selected{% endif %}>Pants</option>
+            <option value="Shorts" {% if request.args.get('categoria')=='Shorts' %}selected{% endif %}>Shorts</option>
+            <option value="Jogger" {% if request.args.get('categoria')=='Jogger' %}selected{% endif %}>Jogger</option>
+            <option value="Oversize" {% if request.args.get('categoria')=='Oversize' %}selected{% endif %}>Oversize
+            </option>
+            <option value="Compresion" {% if request.args.get('categoria')=='Compresion' %}selected{% endif %}>
+                Compresión</option>
+            <option value="Conjunto" {% if request.args.get('categoria')=='Conjunto' %}selected{% endif %}>Conjunto
+                deportivo</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <select class="form-select form-select-sm" name="talla">
+            <option value="">Talla</option>
+            <option value="CH" {% if request.args.get('talla')=='CH' %}selected{% endif %}>CH</option>
+            <option value="M" {% if request.args.get('talla')=='M' %}selected{% endif %}>M</option>
+            <option value="G" {% if request.args.get('talla')=='G' %}selected{% endif %}>G</option>
+            <option value="XG" {% if request.args.get('talla')=='XG' %}selected{% endif %}>Unitalla</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary btn-sm" type="submit">Filtrar</button>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('vista_cliente') }}" class="btn btn-secondary btn-sm">Limpiar filtros</a>
+    </div>
+</form>
+
+<div class="row fade-in">
     {% for producto in productos %}
     <div class="col-sm-6 col-md-4 mb-4">
         <div class="card h-100">
@@ -9,8 +49,9 @@
                 <div class="carousel-inner" style="height: 250px; object-fit: contain;">
                     {% for img in producto.imagenes %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img src="/uploads/{{ img }}" class="d-block w-100 img-fluid"
-                            style="max-height: 350px; object-fit: contain;" alt="{{ producto.nombre }}">
+                        <img src="/uploads/{{ img }}" class="d-block w-100 img-fluid zoomable"
+                            style="max-height: 350px; object-fit: contain; cursor: zoom-in;"
+                            alt="{{ producto.nombre }}">
                     </div>
                     {% endfor %}
                 </div>
@@ -40,4 +81,45 @@
     </div>
     {% endfor %}
 </div>
+
+<!-- Zoom modal -->
+<div class="modal fade" id="zoomModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <img src="" id="zoomImage" class="img-fluid w-100">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 2.1s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const zoomableImages = document.querySelectorAll(".zoomable");
+        const zoomModal = new bootstrap.Modal(document.getElementById("zoomModal"));
+        const zoomImage = document.getElementById("zoomImage");
+
+        zoomableImages.forEach(img => {
+            img.addEventListener("click", () => {
+                zoomImage.src = img.src;
+                zoomModal.show();
+            });
+        });
+    });
+</script>
 {% endblock %}
